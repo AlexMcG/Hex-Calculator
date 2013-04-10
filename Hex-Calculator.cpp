@@ -2,14 +2,15 @@
 //#include <string> //might need this for windows
 #include <cstdlib>
 #include <cmath>
-
-#include <sstream> //needed for my to_string
+#include <sstream> //needed for my to_string implementation
 
 using namespace std;
 
 //TO DO
-//try and keep it to 32 bit SIGNED values DONE
-//try to handle negative values
+//test 32-bit value error handling
+//test negative error handling
+//fix leading zero formating for binary and hex
+//possible 64-bit value support?
 
 string integer; //string for integer value
 string hexadecimal; //string for hexadecimal value
@@ -62,6 +63,7 @@ bool parseInt() {
 	if (input.length() == 0) return false;
 	if (to_string(atoi(input.c_str())).compare(input) != 0) return false; //returns false if over INT_MAX constant.
 	unsigned int count = 0;
+	if (input[0] == '-') count++; //for negative values
 	while (count < input.length()) {
 		if (!isdigit(input[count])) return false;
 		count++;
@@ -119,25 +121,30 @@ void Int_to_Hex() {
 	if (hexadecimal == "") {
 		//conversion
 		int realint = atoi(integer.c_str());
-		string *remainders = new string[9];
+		int remainders[9];
+
+		if (realint < 0) {
+			fill_n(remainders, 9, 15);
+			realint++;
+		} else fill_n(remainders, 9, 0);
+				
 		int count = 0;
-		if (!realint) remainders[count] = "0";
 		while (realint) {
-			remainders[count] = to_string(realint % 16);
+			remainders[count] += realint % 16;
 			realint /= 16;
 			count++;
 		}
-
-		int newcount = 0;
+				
 		hexadecimal += "0x";
-		while (newcount <= count) {
-			if (remainders[count] == "10") remainders[count] = "A";
-			else if (remainders[count] == "11") remainders[count] = "B";
-			else if (remainders[count] == "12") remainders[count] = "C";
-			else if (remainders[count] == "13") remainders[count] = "D";
-			else if (remainders[count] == "14") remainders[count] = "E";
-			else if (remainders[count] == "15") remainders[count] = "F";
-			hexadecimal += remainders[count]; 
+		count = 8;
+		while (count >= 0) {
+			if (remainders[count] == 10) hexadecimal += "A";
+			else if (remainders[count] == 11) hexadecimal += "B";
+			else if (remainders[count] == 12) hexadecimal += "C";
+			else if (remainders[count] == 13) hexadecimal += "D";
+			else if (remainders[count] == 14) hexadecimal += "E";
+			else if (remainders[count] == 15) hexadecimal += "F";
+			else hexadecimal += to_string(abs(remainders[count]));
 			count--;
 		}
 		Hex_to_Bin();
