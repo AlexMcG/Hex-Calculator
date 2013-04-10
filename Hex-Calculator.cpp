@@ -1,14 +1,12 @@
 #include <iostream>
-//#include <string> //might need this for windows
 #include <cstdlib>
 #include <cmath>
 #include <sstream> //needed for my to_string implementation
+#include <climits>
 
 using namespace std;
 
 //TO DO
-//test 32-bit value error handling
-//test negative error handling
 //possible 64-bit value support?
 
 string integer; //string for integer value
@@ -27,7 +25,6 @@ void printResults();
 int main() {	
 	while(true) {
 		//resets global variables
-		//integer, hexadecimal, binary, input = "";
 		integer = "";
 		hexadecimal = "";
 		binary = "";
@@ -48,7 +45,7 @@ int main() {
 
 
 
-//g++ and clang do not support c++11 to_string. had to roll my own.
+//ubuntu 13.04 libs do not support c++11 to_string. had to roll my own.
 string to_string(int input) {
 	stringstream output;
 	output << input;
@@ -56,12 +53,12 @@ string to_string(int input) {
 }
 
 bool parseInt() {
-	cout << "parse int\n";
+	//cout << "parse int\n"; //debug
 
 	//formatting check
 	if (input.length() == 0) return false;
-	if (to_string(atoi(input.c_str())).compare(input) != 0) return false; //returns false if over INT_MAX constant.
-	unsigned int count = 0;
+	if (to_string(atoi(input.c_str())).compare(input) != 0) return false; //returns false if over INT_MAX.
+	int count = 0;
 	if (input[0] == '-') count++; //for negative values
 	while (count < input.length()) {
 		if (!isdigit(input[count])) return false;
@@ -75,15 +72,15 @@ bool parseInt() {
 }
 
 bool parseHex() {
-	cout << "parse hex\n";
+	//cout << "parse hex\n"; //debug
 
 	//formatting check
 	if ((10 < input.length()) || (input.length() < 3)) return false;
 	if ((input[0] != '0') || (input[1] != 'x')) return false;
-	unsigned int count = 2;
+	int count = 2;
 	string allowed = "1234567890ABCDEF";
 	while (count < input.length()) {
-		input[count] = (char) toupper(input[count]); //may have to be changed to string
+		input[count] = (char) toupper(input[count]);
 		if (input.npos == allowed.find(input[count])) return false;
 		count++;
 	}
@@ -102,11 +99,11 @@ bool parseHex() {
 }
 
 bool parseBin() {
-	cout << "parse bin\n";
+	//cout << "parse bin\n"; //debug
 
 	//formatting check
 	if ((33 < input.length()) || (input.length() < 2)) return false;
-	unsigned int count = 1;
+	int count = 1;
 	if (input[0] != '_') return false;
 	while (count < input.length()) {
 		if ((input[count] != '0') && (input[count] != '1')) return false;
@@ -127,7 +124,8 @@ bool parseBin() {
 
 
 void Int_to_Hex() {
-	cout << "int to hex\n";
+	//cout << "int to hex\n"; //debug
+
 	//checks completion
 	if (hexadecimal == "") {
 		//conversion
@@ -164,11 +162,12 @@ void Int_to_Hex() {
 
 
 void Hex_to_Bin() {
-	cout << "hex to bin\n";
+	//cout << "hex to bin\n"; //debug
+
 	//checks completion
 	if (binary == "") {
 		//conversion
-		unsigned int count = 2;
+		int count = 2;
 		char hexSymbols[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 		while (count < hexadecimal.length()) {
 			if (hexadecimal[count] == hexSymbols[0]) binary += "0000";
@@ -193,17 +192,18 @@ void Hex_to_Bin() {
 	} else printResults();  //if done prints results
 }
 
-
+float two = 2; //set to float so compiler will use the right function in windows
 void Bin_to_Int() {
-	cout << "bin to int\n";
+	//cout << "bin to int\n"; //debug
+	
 	//checks completion
 	if (integer == "") {
 		//conversion
 		int realint = 0;
-		unsigned int count = 0;
+		int count = 0;
 		int length = binary.length() - 1;
 		while (0 <= length) {
-			if (binary[length] == '1') realint += int(pow(2, count));
+			if (binary[length] == '1') realint += int(pow(two, count));
 			count++;
 			length--;
 		}
