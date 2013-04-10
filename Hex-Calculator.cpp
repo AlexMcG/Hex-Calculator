@@ -9,7 +9,6 @@ using namespace std;
 
 //TO DO
 //try and keep it to 32 bit SIGNED values DONE
-//make sure error parsing is correct for negatives
 //try to handle negative values
 
 string integer; //string for integer value
@@ -35,10 +34,13 @@ int main() {
 		input = "";
 
 		//prompt for input
-		cout << "Enter a value. if the value is hexadecimal, prepend it with \"0x\". if the value is binary, prepend the value with \"_\"\n";
+		cout << "Enter a value. If the value is hexadecimal, prepend it with \"0x\". "
+			 << "If the value is binary, prepend it with \"_\". "
+			 << "Press q to quit.\n";
 		getline(cin, input);
 
 		//parses input
+		if (input == "q" || input == "Q") return 1; //quit option
 		if (!(parseInt() || parseHex() || parseBin())) cout << "INPUT ERROR\n";
 	}
 	return 0;
