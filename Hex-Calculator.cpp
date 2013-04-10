@@ -9,7 +9,6 @@ using namespace std;
 //TO DO
 //test 32-bit value error handling
 //test negative error handling
-//fix leading zero formating for binary and hex
 //possible 64-bit value support?
 
 string integer; //string for integer value
@@ -88,7 +87,14 @@ bool parseHex() {
 		if (input.npos == allowed.find(input[count])) return false;
 		count++;
 	}
-
+	
+	//formats with leading zeroes
+	input.erase(0, 2);
+	while (input.length() < 8) {
+			input.insert(0, "0");
+	}
+	input.insert(0, "0x");
+	
 	//if formatted right sets hexadecimal string and moves on
 	hexadecimal = input;
 	Hex_to_Bin();
@@ -107,8 +113,13 @@ bool parseBin() {
 		count++;
 	}
 
+	//formats with leading zeroes and removes "_" for storage
+	input.erase(0, 1);
+	while (input.length() < 32) {
+			input.insert(0, "0");
+	}
+	
 	//if formatted right, sets binary string and moves on
-	input.replace(0, 1, ""); //deletes underscore so it can be stored correctly
 	binary = input;
 	Bin_to_Int();
 	return true;
@@ -121,12 +132,12 @@ void Int_to_Hex() {
 	if (hexadecimal == "") {
 		//conversion
 		int realint = atoi(integer.c_str());
-		int remainders[9];
+		int remainders[8];
 
 		if (realint < 0) {
-			fill_n(remainders, 9, 15);
+			fill_n(remainders, 8, 15);
 			realint++;
-		} else fill_n(remainders, 9, 0);
+		} else fill_n(remainders, 8, 0);
 				
 		int count = 0;
 		while (realint) {
@@ -136,7 +147,7 @@ void Int_to_Hex() {
 		}
 				
 		hexadecimal += "0x";
-		count = 8;
+		count = 7;
 		while (count >= 0) {
 			if (remainders[count] == 10) hexadecimal += "A";
 			else if (remainders[count] == 11) hexadecimal += "B";
