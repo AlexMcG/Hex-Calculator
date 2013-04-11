@@ -1,8 +1,6 @@
-#include <iostream>
 #include <cstdlib>
 #include <cmath>
 #include <sstream> //needed for my to_string implementation
-#include <climits>
 
 using namespace std;
 
