@@ -46,7 +46,7 @@ int main() {
 
 
 //ubuntu 13.04 libs do not support c++11 to_string. had to roll my own.
-string to_string(int input) {
+string toString(int input) {
 	stringstream output;
 	output << input;
 	return output.str();
@@ -57,7 +57,7 @@ bool parseInt() {
 
 	//formatting check
 	if (input.length() == 0) return false;
-	if (to_string(atoi(input.c_str())).compare(input) != 0) return false; //returns false if over INT_MAX.
+	if (toString(atoi(input.c_str())).compare(input) != 0) return false; //returns false if over INT_MAX.
 	int count = 0;
 	if (input[0] == '-') count++; //for negative values
 	while (count < input.length()) {
@@ -153,7 +153,7 @@ void Int_to_Hex() {
 			else if (remainders[count] == 13) hexadecimal += "D";
 			else if (remainders[count] == 14) hexadecimal += "E";
 			else if (remainders[count] == 15) hexadecimal += "F";
-			else hexadecimal += to_string(abs(remainders[count]));
+			else hexadecimal += toString(abs(remainders[count]));
 			count--;
 		}
 		Hex_to_Bin();
@@ -207,7 +207,7 @@ void Bin_to_Int() {
 			count++;
 			length--;
 		}
-		integer = to_string(realint);
+		integer = toString(realint);
 		Int_to_Hex();
 	} else printResults();  //if done prints results
 }
